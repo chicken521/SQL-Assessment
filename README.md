@@ -29,20 +29,25 @@ marketing_data contains ad impression and click data by date and location:
  Select the first 2 rows from the marketing data
 ​
 >  select *
+
 >  from marketing_data
+
 > limit 2;
 ​
 *  Question #1
  Generate a query to get the sum of the clicks of the marketing data
 ​
 > SELECT sum(clicks)
+
 > from marketing_data;
 
 *  Question #2
  Generate a query to gather the sum of revenue by store_location from the store_revenue table
 ​
 > Select sum(revenue), store_location
+
 > from store_revenue
+
 > group by store_location;
 
 *  Question #3
@@ -51,17 +56,29 @@ and geo.
  Please ensure all records from each table are accounted for.
 ​
 > insert into marketing_data (date, geo)
+
 > select date, replace(store_location, 'United States-TX','TX')
+
 > from store_revenue
+
 > where date='2016-01-06';
+
 > insert into store_revenue (date, store_location)
+
 > select date, geo
+
 > from marketing_data
+
 > where geo='MN';
+
 > select marketing_data.impressions, marketing_data.clicks, sum(store_revenue.revenue) as revenue, marketing_data.date,  marketing_data.geo
+
 > from store_revenue
+
 > full join marketing_data on store_revenue.date=marketing_data.date and replace(store_revenue.store_location, 'United States-','')=marketing_data.geo
+
 > group by marketing_data.date, store_revenue.date, marketing_data.geo, marketing_data.impressions, marketing_data.clicks
+
 > order by marketing_data.geo, store_revenue.date;
 
 * Question #4
@@ -73,8 +90,13 @@ and geo.
  Generate a query to rank in order the top 10 revenue producing states
 
 > select revenue, store_location,
+
 > rank() over(order by revenue desc) rank
+
 > from store_revenue
+
 > where store_location!='MN'
+
 > order by rank
+
 > limit 10;
